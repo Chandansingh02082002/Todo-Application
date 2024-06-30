@@ -11,6 +11,7 @@ const TaskList = ({ view }) => {
     const [timers, setTimers] = useState([]);
     const [timerInput, setTimerInput] = useState('');
     const [editTimerIndex, setEditTimerIndex] = useState(null); // State to track which task's timer is being edited
+    const [viewState, setView] = useState(view); // State to manage the current view
 
     useEffect(() => {
         // Save tasks to local storage whenever tasks change
@@ -47,12 +48,12 @@ const TaskList = ({ view }) => {
     };
 
     const handleSetTimer = (index) => {
-        const time = parseInt(timerInput, 10); // Convert input to integer (milliseconds)
+        const time = parseInt(timerInput, 10) * 60000; // Convert input to minutes and then to milliseconds
         if (!isNaN(time)) {
             startTimer(index, time);
             setTimerInput('');
         } else {
-            toast.error('Please enter a valid number for the timer (milliseconds).');
+            toast.error('Please enter a valid number for the timer (minutes).');
         }
     };
 
@@ -101,15 +102,15 @@ const TaskList = ({ view }) => {
         toast.error(`Task "${taskText}" deleted`);
     };
 
-    const filteredTasks = view === 'all'
-        ? tasks
-        : view === 'incomplete'
-            ? tasks.filter(task => !task.completed)
-            : tasks.filter(task => task.completed);
+    const filteredTasks = viewState === 'incomplete'
+        ? tasks.filter(task => !task.completed)
+        : viewState === 'completed'
+            ? tasks.filter(task => task.completed)
+            : tasks;
 
     return (
         <Container>
-            <h3>{view === 'all' ? 'All Tasks' : view === 'incomplete' ? 'Incomplete Tasks' : 'Completed Tasks'}</h3>
+            <h3>{viewState === 'incomplete' ? 'Incomplete Tasks' : viewState === 'completed' ? 'Completed Tasks' : 'All Tasks'}</h3>
             <ListGroup>
                 {filteredTasks.map((task, index) => (
                     <ListGroup.Item
@@ -150,7 +151,7 @@ const TaskList = ({ view }) => {
                                 </ButtonGroup>
                                 <InputGroup style={{ maxWidth: '150px' }}>
                                     <FormControl
-                                        placeholder="Timer (ms)"
+                                        placeholder="Timer (mins)"
                                         value={timerInput}
                                         onChange={handleTimerInputChange}
                                         aria-label="Timer input"
@@ -160,7 +161,7 @@ const TaskList = ({ view }) => {
                             </div>
                         )}
                         <div>
-                            {view === 'incomplete' && (
+                            {viewState === 'incomplete' && (
                                 <ButtonGroup className="me-2">
                                     <Button
                                         variant="danger"
@@ -190,7 +191,7 @@ const TaskList = ({ view }) => {
                                     variant="info"
                                     size="sm"
                                     onClick={() => {
-                                        startTimer(index, parseInt(timerInput, 10));
+                                        startTimer(index, parseInt(timerInput, 10) * 60000);
                                         setEditTimerIndex(null); // Clear edit mode
                                         toast.info(`Timer updated for task "${tasks[index].text}"`);
                                     }}
@@ -198,31 +199,29 @@ const TaskList = ({ view }) => {
                                     Save Timer
                                 </Button>
                             )}
-                            {view === 'incomplete' && (
+                            {viewState === 'incomplete' && (
                                 <Button
                                     variant="warning"
                                     size="sm"
-                                    onClick={() =>
-handleTaskEdit(index)}
-className="ms-2 border border-dark">
-Edit
-</Button>
-)}
-<Button
-variant="danger"
-size="sm"
-onClick={() => handleTaskDelete(index)}
-className="ms-2 border border-dark">
-Delete
-</Button>
-</div>
-</ListGroup.Item>
-))}
-</ListGroup>
-<ToastContainer /> {/* ToastContainer for react-toastify */}
-</Container>
-);
+                                    onClick={() => handleTaskEdit(index)}
+                                    className="ms-2 border border-dark">
+                                    Edit
+                                </Button>
+                            )}
+                            <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => handleTaskDelete(index)}
+                                className="ms-2 border border-dark">
+                                Delete
+                            </Button>
+                        </div>
+                    </ListGroup.Item>
+                ))}
+            </ListGroup>
+            <ToastContainer /> {/* ToastContainer for react-toastify */}
+        </Container>
+    );
 };
 
 export default TaskList;
-
