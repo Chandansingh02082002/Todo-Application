@@ -1,12 +1,77 @@
-.App {
-  text-align: center;
+/* Ensure proper scaling on mobile devices */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
 }
 
-input {
-  margin-right: 10px;
-  padding: 5px;
+.app-background {
+  background-image: url('./image.png'); /* Replace with your image path or URL */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px; /* Add some padding to the top */
 }
 
-button {
-  margin-left: 5px;
+.main-container {
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 800px;
+  margin-top: 20px; /* Add some margin to separate from the top */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.list-container {
+  width: 100%; /* Make the list container fill the main container */
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-container {
+      width: 95%;
+      padding: 15px;
+  }
+
+  h1 {
+      font-size: 1.5rem;
+  }
+
+  .list-container {
+      padding: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .main-container {
+      width: 100%;
+      padding: 10px;
+  }
+
+  h1 {
+      font-size: 1.25rem;
+  }
+
+  .list-container {
+      padding: 10px;
+  }
 }

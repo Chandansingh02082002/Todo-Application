@@ -10,7 +10,7 @@ export const tasksSlice = createSlice({
     initialState,
     reducers: {
         addTask: (state, action) => {
-            state.tasks.push({ text: action.payload, completed: false, priority: 'low' }); // Default priority is 'low'
+            state.tasks.push({ text: action.payload, completed: false, priority: 'none' }); // Default priority is 'low'
             localStorage.setItem('tasks', JSON.stringify(state.tasks));
         },
         deleteTask: (state, action) => {

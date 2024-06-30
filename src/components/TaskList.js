@@ -10,9 +10,7 @@ const TaskList = ({ view }) => {
     const dispatch = useDispatch();
     const [timers, setTimers] = useState([]);
     const [timerInput, setTimerInput] = useState('');
-    const [showAllTasks, setShowAllTasks] = useState(false); // State to toggle showing all tasks
     const [editTimerIndex, setEditTimerIndex] = useState(null); // State to track which task's timer is being edited
-    const [viewState, setViewState] = useState(view); // State to manage the current view
 
     useEffect(() => {
         // Save tasks to local storage whenever tasks change
@@ -81,16 +79,6 @@ const TaskList = ({ view }) => {
         toast.success(`Priority updated for task "${tasks[index].text}"`);
     };
 
-    const handleToggleTasks = (type) => {
-        if (type === 'all') {
-            setShowAllTasks(true);
-            setViewState('all');
-        } else {
-            setShowAllTasks(false);
-            setViewState(type); // 'incomplete' or 'completed', depending on your logic
-        }
-    };
-
     const handleTaskCompletionToggle = (index) => {
         dispatch(toggleTaskCompletion(index));
         if (!tasks[index].completed) {
@@ -113,44 +101,20 @@ const TaskList = ({ view }) => {
         toast.error(`Task "${taskText}" deleted`);
     };
 
-    const filteredTasks = showAllTasks
+    const filteredTasks = view === 'all'
         ? tasks
-        : viewState === 'incomplete'
+        : view === 'incomplete'
             ? tasks.filter(task => !task.completed)
             : tasks.filter(task => task.completed);
 
     return (
         <Container>
-            <h3>{showAllTasks ? 'All Tasks' : viewState === 'incomplete' ? 'Incomplete Tasks' : 'Completed Tasks'}</h3>
-            <ButtonGroup className="mb-3">
-                <Button
-                    variant="primary"
-                    onClick={() => handleToggleTasks('incomplete')}
-                    className={viewState === 'incomplete' ? 'active' : ''}
-                >
-                    Incomplete Tasks
-                </Button>
-                <Button
-                    variant="secondary"
-                    onClick={() => handleToggleTasks('completed')}
-                    className={viewState === 'completed' ? 'active' : ''}
-                >
-                    Completed Tasks
-                </Button>
-                <Button
-                    variant="secondary"
-                    onClick={() => handleToggleTasks('all')}
-                    className={viewState === 'all' ? 'active' : ''}
-                >
-                    All Tasks
-                </Button>
-            </ButtonGroup>
+            <h3>{view === 'all' ? 'All Tasks' : view === 'incomplete' ? 'Incomplete Tasks' : 'Completed Tasks'}</h3>
             <ListGroup>
                 {filteredTasks.map((task, index) => (
                     <ListGroup.Item
                         key={index}
-                        className={`d-flex justify-content-between align-items-center ${task.priority ? `bg-${getPriorityColor(task.priority)}` : ''}`}
-                    >
+                        className={`d-flex justify-content-between align-items-center ${task.priority ? `bg-${getPriorityColor(task.priority)}` : ''}`}>
                         <FormCheck
                             type="checkbox"
                             checked={task.completed}
@@ -196,7 +160,7 @@ const TaskList = ({ view }) => {
                             </div>
                         )}
                         <div>
-                            {viewState === 'incomplete' && (
+                            {view === 'incomplete' && (
                                 <ButtonGroup className="me-2">
                                     <Button
                                         variant="danger"
@@ -234,29 +198,31 @@ const TaskList = ({ view }) => {
                                     Save Timer
                                 </Button>
                             )}
-                            {viewState === 'incomplete' && (
+                            {view === 'incomplete' && (
                                 <Button
                                     variant="warning"
                                     size="sm"
-                                    onClick={() => handleTaskEdit(index)}
-                                    className="ms-2 border border-dark">
-                                    Edit
-                                </Button>
-                            )}
-                            <Button
-                                variant="danger"
-                                size="sm"
-                                onClick={() => handleTaskDelete(index)}
-                                className="ms-2 border border-dark">
-                                Delete
-                            </Button>
-                        </div>
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
-            <ToastContainer /> {/* ToastContainer for react-toastify */}
-        </Container>
-    );
+                                    onClick={() =>
+handleTaskEdit(index)}
+className="ms-2 border border-dark">
+Edit
+</Button>
+)}
+<Button
+variant="danger"
+size="sm"
+onClick={() => handleTaskDelete(index)}
+className="ms-2 border border-dark">
+Delete
+</Button>
+</div>
+</ListGroup.Item>
+))}
+</ListGroup>
+<ToastContainer /> {/* ToastContainer for react-toastify */}
+</Container>
+);
 };
 
 export default TaskList;
+
