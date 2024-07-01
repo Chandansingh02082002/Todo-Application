@@ -15,11 +15,7 @@ const App = () => {
                 <Container className="main-container">
                     <h1 className="text-center">To-Do List</h1>
                     <TaskInput />
-                    <ButtonGroup className="mb-3">
-                        <Button variant="primary" onClick={() => setView('incomplete')}>Incomplete Tasks</Button>
-                        <Button variant="secondary" onClick={() => setView('completed')}>Completed Tasks</Button>
-                        <Button variant="secondary" onClick={() => setView('all')}>All Tasks</Button>
-                    </ButtonGroup>
+                  
                     <div className="list-container">
                         <TaskList view={view} /> {/* Pass the current view as a prop */}
                     </div>

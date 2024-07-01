@@ -11,7 +11,7 @@ const TaskList = ({ view }) => {
     const [timers, setTimers] = useState([]);
     const [timerInput, setTimerInput] = useState('');
     const [editTimerIndex, setEditTimerIndex] = useState(null); // State to track which task's timer is being edited
-    const [viewState, setView] = useState(view); // State to manage the current view
+    const [viewState, setViewState] = useState(view); // State to manage the current view
 
     useEffect(() => {
         // Save tasks to local storage whenever tasks change
@@ -109,8 +109,33 @@ const TaskList = ({ view }) => {
             : tasks;
 
     return (
-        <Container>
-            <h3>{viewState === 'incomplete' ? 'Incomplete Tasks' : viewState === 'completed' ? 'Completed Tasks' : 'All Tasks'}</h3>
+        <Container className="py-3">
+            <h3 className="text-center mb-4">
+                {viewState === 'incomplete' ? 'Incomplete Tasks' : viewState === 'completed' ? 'Completed Tasks' : 'All Tasks'}
+            </h3>
+            <ButtonGroup className="mb-3">
+                <Button
+                    variant="primary"
+                    onClick={() => setViewState('incomplete')}
+                    className={viewState === 'incomplete' ? 'active' : ''}
+                >
+                    Incomplete Tasks
+                </Button>
+                <Button
+                    variant="secondary"
+                    onClick={() => setViewState('completed')}
+                    className={viewState === 'completed' ? 'active' : ''}
+                >
+                    Completed Tasks
+                </Button>
+                <Button
+                    variant="secondary"
+                    onClick={() => setViewState('all')}
+                    className={viewState === 'all' ? 'active' : ''}
+                >
+                    All Tasks
+                </Button>
+            </ButtonGroup>
             <ListGroup>
                 {filteredTasks.map((task, index) => (
                     <ListGroup.Item
